@@ -1,0 +1,6 @@
+apiVersion: v2
+name: class-schedule-redis
+description: Redis Helm chart for Class-Schedule
+type: application
+version: 0.1.0
+appVersion: "7"
