@@ -1,34 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "class-schedule-redis.fullname" . }}
+  name: {{ .Release.Name }}-redis
+  labels:
+    app: redis
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "class-schedule-redis.name" . }}
+      app: redis
   template:
     metadata:
       labels:
-        app: {{ include "class-schedule-redis.name" . }}
+        app: redis
     spec:
       containers:
-        - name: redis
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          ports:
-            - containerPort: 6379
-          command:
-            - "redis-server"
-            - "/usr/local/etc/redis/redis.conf"
-          volumeMounts:
-            - name: redis-data
-              mountPath: /data
-            - name: redis-config
-              mountPath: /usr/local/etc/redis
-      volumes:
-        - name: redis-data
-          persistentVolumeClaim:
-            claimName: {{ include "class-schedule-redis.fullname" . }}-pvc
-        - name: redis-config
-          configMap:
-            name: {{ include "class-schedule-redis.fullname" . }}-config
+      - name: redis
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: 6379
